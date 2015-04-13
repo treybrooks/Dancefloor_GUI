@@ -1,0 +1,3 @@
+nodebox-opengl==1.6.1
+numpy==1.9.2
+pyglet==1.2.2
