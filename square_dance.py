@@ -20,7 +20,6 @@ purple = [150, 20, 102]
 
 black = [0, 0, 0]
 
-
 # the HULK
 rich_purple = [123, 50, 148]  # rather pink
 med_purple = [194, 165, 207]  # similar to white
@@ -43,10 +42,13 @@ xmas = [red, green, white]
 # Bubble Gum
 bubble_gum = [purple, rich_purple, pink, black]
 
+# Martins Wedding
+wedding = [purple, white, pink, black]
+
 # The Blues
 blues = [turq, blue, orange, black]
 # bubble_gum xmas,
-schemes = [blues, under_the_sea]
+schemes = [under_the_sea]
 
 
 def draw_line(df, x1, y1, x2, y2, color):
@@ -107,6 +109,7 @@ class SquareDance(DF_Pattern):
     def __init__(self, *args, **kargs):
         DF_Pattern.__init__(self, *args, **kargs)
         self.color_list = choice(schemes)
+        self.df = np.zeros((16, 16, 3), dtype=np.uint8)
 
     def what_to_draw(self, operation):
         if operation == 0:

@@ -8,7 +8,7 @@ def c_scale(r=0, g=0, b=0):
 
 def hsv_rgb(r=0, g=0, b=0, h=0, s=1, v=0.5):
     if s == 0:
-        r,g,b = 0,0,0
+        r, g, b = 0, 0, 0
     else:
         _h = h*6.
         i = int(_h)

@@ -44,9 +44,9 @@ class PlayPause(Button):
         mid_x = self.width / 2
         mid_y = self.height / 2
 
-        if self.state: # play
+        if self.state:  # play
             rect(0, 0, self.width, self.height, fill=self.clr)
-        else: # pause
+        else:  # pause
             rect(0, 0, self.width, self.height, fill=Color(0.3))
 
         fill(Color(1))
@@ -83,12 +83,13 @@ class ClearButton(Button):
              width=None, height=None, align=CENTER,
              fill=Color(1))
 
+
 class PatternButton(Button):
     def __init__(self, df_obj, algorithm, *args, **kargs):
         Button.__init__(self, *args, **kargs)
         self.clr = Color(0.2)
         self.df_obj = df_obj
-        self.algo = algorithm
+        self.algorithm = algorithm
 
     def on_mouse_press(self, mouse):
-        self.df_obj.set_algorithm(self.algo)
+        self.df_obj.set_algorithm(self.algorithm)

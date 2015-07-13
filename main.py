@@ -2,9 +2,11 @@ from nodebox.graphics import *
 import numpy as np
 import socket
 
+
 from buttons import Button, PlayPause, PatternButton, ClearButton
 import square_dance as sd
 import diamonds as dia
+import fire
 
 from helpers import c_scale, convert_array
 
@@ -27,7 +29,7 @@ blue = Color(*c_scale(0, 0, 255))
 mod_width = 300
 mod_height = 300
 
-canvas.fps = 30
+canvas.fps = 13
 canvas.size = 800, 800
 
 
@@ -104,14 +106,16 @@ class DanceFloor(Layer):
 
         self.play = True
         # self.pattern = sd.SquareDance(self.data)
-        self.pattern = dia.Diamonds(self.data)
+        self.algorithm = sd.SquareDance(self.data)
 
     def play_pause(self):
         print(('Play', 'Pause')[self.play])
         self.play = not self.play
 
     def set_algorithm(self, algorithm):
-        self.pattern = algorithm
+        del self.algorithm
+        self.data = self.clear_df()
+        self.algorithm = algorithm
 
     def clear_df(self):
         zs = np.zeros((16, 16, 3), dtype=np.uint8)  # static and properly shouldn't be
@@ -132,7 +136,7 @@ class DanceFloor(Layer):
                 for module, data in zip(self.modules, data_list):
                     module.update_data(data)
 
-            self.data = self.pattern.step()
+            self.data = self.algorithm.step()
             self.counter += 1
 
     def df_write(self):
@@ -153,23 +157,24 @@ dance_floor = DanceFloor(df_fps=10, x=100, y=50)
 
 sq_d_fxn = sd.SquareDance()
 dia_fxn = dia.Diamonds()
+fire_fxn = fire.Fire()
 
 pause_button = PlayPause(function=dance_floor.play_pause,
                          x=0, y=600, width=100, height=30)
 
 diamonds_button = PatternButton(dance_floor, dia_fxn, x=110, y=600, width=100, height=30)
 square_dance_button = PatternButton(dance_floor, sq_d_fxn, x=220, y=600, width=100, height=30)
-
-clear_button = ClearButton(dance_floor, dance_floor.clear_df,
-                         x=330, y=600, width=100, height=30)
+fire_button = PatternButton(dance_floor, fire_fxn, x=330, y=600, width=100, height=30)
+#
+# clear_button = ClearButton(dance_floor, dance_floor.clear_df,
+#                          x=330, y=600, width=100, height=30)
 
 dance_floor.append(pause_button)
 dance_floor.append(diamonds_button)
 dance_floor.append(square_dance_button)
-dance_floor.append(clear_button)
+dance_floor.append(fire_button)
+# dance_floor.append(clear_button)
 
 canvas.append(dance_floor)
 
-# import pdb
-# pdb.set_trace()
 canvas.run()
