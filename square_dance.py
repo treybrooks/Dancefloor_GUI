@@ -51,24 +51,24 @@ blues = [turq, blue, orange, black]
 schemes = [under_the_sea]
 
 
-def draw_line(df, x1, y1, x2, y2, color):
-    if x1 > 15:
-        x1 = 15
+def draw_line(df, x1, y1, x2, y2, color, x_max=24, y_max=8):
+    if x1 > x_max:
+        x1 = x_max
     elif x1 < 0:
         x1 = 0
 
-    if x2 > 15:
-        x2 = 15
+    if x2 > x_max:
+        x2 = x_max
     elif x2 < 0:
         x2 = 0
 
-    if y1 > 15:
-        y1 = 15
+    if y1 > y_max:
+        y1 = y_max
     elif y1 < 0:
         y1 = 0
 
-    if y2 > 15:
-        y2 = 15
+    if y2 > y_max:
+        y2 = y_max
     elif y2 < 0:
         y2 = 0
 
@@ -101,7 +101,14 @@ def draw_square(df, center, size, color):
 
 def draw_filled_square(df, center, size, color):
     for i in range(size):
-        df = draw_line(df, center[0]-size/2+1+i, center[1]+size/2, center[0]-size/2+1+i, center[1]-size/2+1, color)
+        df = draw_line(
+            df,
+            center[0]-size/2+1+i,
+            center[1]+size/2,
+            center[0]-size/2+1+i,
+            center[1]-size/2+1,
+            color
+        )
     return df
 
 
@@ -109,7 +116,7 @@ class SquareDance(DF_Pattern):
     def __init__(self, *args, **kargs):
         DF_Pattern.__init__(self, *args, **kargs)
         self.color_list = choice(schemes)
-        self.df = np.zeros((16, 16, 3), dtype=np.uint8)
+        # self.df = np.zeros((8, 24, 3), dtype=np.uint8)
 
     def what_to_draw(self, operation):
         if operation == 0:

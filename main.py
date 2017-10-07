@@ -20,7 +20,7 @@ port = 21337
 u1 = '10.0.0.11'
 u2 = '10.0.0.12'
 u3 = '10.0.0.13'
-u4 = '10.0.0.14'
+# u4 = '10.0.0.14'
 
 red = Color(*c_scale(255, 0, 0))
 green = Color(*c_scale(0, 255, 0))
@@ -30,7 +30,7 @@ mod_width = 300
 mod_height = 300
 
 canvas.fps = 13
-canvas.size = 800, 800
+canvas.size = 1000, 500
 
 
 def split_data_into_quadrants(data):
@@ -41,6 +41,15 @@ def split_data_into_quadrants(data):
     data2 = [data[i][:h / 2] for i in range(w / 2, w)]  # bot_left
     data3 = [data[i][h / 2:] for i in range(w / 2, w)]  # bot_right
     return [np.asarray(data0), np.asarray(data1), np.asarray(data2), np.asarray(data3)]
+
+
+def split_data_into_three_sections(data):
+    w = len(data)
+    h = len(data[1])
+    data0 = [data[i][:h] for i in range(w)]  # far left
+    data1 = [data[i][h/3:2*h/3] for i in range(w)]  # middle
+    data2 = [data[i][2*h/3:h] for i in range(w)]  # far right
+    return [np.asarray(data0), np.asarray(data1), np.asarray(data2)]
 
 
 class Light(Layer):
@@ -94,15 +103,15 @@ class Module(Layer):
 class DanceFloor(Layer):
     def __init__(self, df_fps=2, *args, **kargs):
         Layer.__init__(self, *args, **kargs)
-        self.data = np.zeros((16, 16, 3), dtype=np.uint8)  # static and properly shouldn't be
+        self.data = np.zeros((8, 24, 3), dtype=np.uint8)  # static and properly shouldn't be
         self.df_fps = df_fps
         self.counter = 0
 
-        mod1 = Module(clr=red, ip=u1, x=0, y=mod_height, width=mod_width, height=mod_height)
-        mod2 = Module(clr=green, ip=u2, x=mod_width, y=mod_height, width=mod_width, height=mod_height)
-        mod3 = Module(clr=blue, ip=u3, x=0, y=0, width=mod_width, height=mod_height)
-        mod4 = Module(clr=red, ip=u4, x=mod_width, y=0, width=mod_width, height=mod_height)
-        self.modules = [mod1, mod2, mod3, mod4]
+        mod1 = Module(clr=red,   ip=u1, x=0,           y=mod_height, width=mod_width, height=mod_height)
+        mod2 = Module(clr=green, ip=u2, x=mod_width,   y=mod_height, width=mod_width, height=mod_height)
+        mod3 = Module(clr=blue,  ip=u3, x=2*mod_width, y=mod_height, width=mod_width, height=mod_height)
+        # mod4 = Module(clr=red, ip=u4, x=mod_width, y=0, width=mod_width, height=mod_height)
+        self.modules = [mod1, mod2, mod3] # , mod4]
 
         self.play = True
         # self.pattern = sd.SquareDance(self.data)
@@ -118,7 +127,7 @@ class DanceFloor(Layer):
         self.algorithm = algorithm
 
     def clear_df(self):
-        zs = np.zeros((16, 16, 3), dtype=np.uint8)  # static and properly shouldn't be
+        zs = np.zeros((8, 24, 3), dtype=np.uint8)  # static and properly shouldn't be
         self.data = zs
         return zs
 
@@ -132,7 +141,7 @@ class DanceFloor(Layer):
                 self.df_write()
                 self.counter = 0
 
-                data_list = split_data_into_quadrants(self.data)
+                data_list = split_data_into_three_sections(self.data)
                 for module, data in zip(self.modules, data_list):
                     module.update_data(data)
 
@@ -153,18 +162,18 @@ class DanceFloor(Layer):
 def draw(canvas):
     dance_floor.draw()
 
-dance_floor = DanceFloor(df_fps=10, x=100, y=50)
+dance_floor = DanceFloor(df_fps=10, x=50, y=-200)
 
 sq_d_fxn = sd.SquareDance()
 dia_fxn = dia.Diamonds()
-fire_fxn = fire.Fire()
+# fire_fxn = fire.Fire()
 
 pause_button = PlayPause(function=dance_floor.play_pause,
                          x=0, y=600, width=100, height=30)
 
 diamonds_button = PatternButton(dance_floor, dia_fxn, x=110, y=600, width=100, height=30)
 square_dance_button = PatternButton(dance_floor, sq_d_fxn, x=220, y=600, width=100, height=30)
-fire_button = PatternButton(dance_floor, fire_fxn, x=330, y=600, width=100, height=30)
+# fire_button = PatternButton(dance_floor, fire_fxn, x=330, y=600, width=100, height=30)
 #
 # clear_button = ClearButton(dance_floor, dance_floor.clear_df,
 #                          x=330, y=600, width=100, height=30)
@@ -172,7 +181,7 @@ fire_button = PatternButton(dance_floor, fire_fxn, x=330, y=600, width=100, heig
 dance_floor.append(pause_button)
 dance_floor.append(diamonds_button)
 dance_floor.append(square_dance_button)
-dance_floor.append(fire_button)
+# dance_floor.append(fire_button)
 # dance_floor.append(clear_button)
 
 canvas.append(dance_floor)

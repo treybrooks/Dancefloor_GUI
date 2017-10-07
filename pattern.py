@@ -3,14 +3,14 @@ import numpy as np
 
 
 class DF_Pattern:
-    def __init__(self, df=np.zeros((16, 16, 3), dtype=np.uint8)):
+    def __init__(self, df=np.zeros((8, 24, 3), dtype=np.uint8)):
         self.debug = False
 
         self.df = df
         self.state = False
 
-        self.ROWS = 16
-        self.COLS = 16
+        self.ROWS = 8
+        self.COLS = 24
         self.max_dim = max([self.ROWS, self.COLS])
 
         self.x_vel = 1

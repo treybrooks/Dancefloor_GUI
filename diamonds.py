@@ -47,8 +47,8 @@ class Diamonds(DF_Pattern):
                 # distance from center
                 dist = abs(i-self.ROWS/2.) + abs(j-self.COLS/2.)
                 self.df = help.set_pixel(self.df,  # mod_data
-                                         (i+self.iteration) % 16,  # y
-                                         (j+self.iteration) % 16,  # x
+                                         (i+self.iteration) % self.ROWS,  # y
+                                         (j+self.iteration) % self.COLS,  # x
                                          self.colors[dist % COLOR_BUFFER])  # color
 
         self.h += self.dh
